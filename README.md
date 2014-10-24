@@ -7,14 +7,14 @@ How  It Works
 -----------------
 This image uses [python-beaver](https://github.com/josegonzalez/python-beaver) to ship local log files to a central Logstash server.
 
-The image has one mountable volume `/app/logs` that can be used to provided access to the local log folder (such as `/var/logs`).  By default this will monitor changes to all `.log` files in `/app/logs` recursively and ship the events out to standard out.
+The image has one mountable volume `/app/log` that can be used to provided access to the local log folder (such as `/var/log`).  By default this will monitor changes to all `.log` files in `/app/log` recursively and ship the events out to standard out.
 
 Configuring the Beaver
 ------------------------------
 
 There are three configuration parameters:
 
- 1. The `/app/logs` volume for providing local logs to the system
+ 1. The `/app/log` volume for providing local logs to the system
  2. The environment variable `$BEAVERCONF_URL`. This provides a way to load a new beaver configuration file to the image.  For testing you can create a github gist and provide the raw file url.  A beaver configuration for sending syslogs out could look like:
 ```
 [beaver]
@@ -30,7 +30,7 @@ tags: sys,main
 
 Running this configuration would then become:
 ```
-$ docker run -t -d -v /var/logs:/app/logs \
+$ docker run -t -d -v /var/log:/app/log \
    -e BEAVERCONF_URL=https://gist.githubusercontent.com/btashton/0e43c1d5824915c57335/raw/f5d2526a7be2f5a7604055745d27f004068e7b4d/beaver.conf \
    -e BEAVER_OPTS='-t udp' \
    --net host \
@@ -52,7 +52,7 @@ $ docker run -d \
   -e LOGSTASH_CONFIG_URL=https://gist.githubusercontent.com/btashton/eb36d37e6cfc9800a63e/raw/logstash.conf \
   btashton/docker-logstash
  
-$ docker run -t -d -v /var/logs:/app/logs \
+$ docker run -t -d -v /var/log:/app/log \
    -e BEAVERCONF_URL=https://gist.githubusercontent.com/btashton/0e43c1d5824915c57335/raw/f5d2526a7be2f5a7604055745d27f004068e7b4d/beaver.conf \
    -e BEAVER_OPTS='-t udp' \
    --net host \
